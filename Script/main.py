@@ -17,6 +17,7 @@ gpio = RpiGpio()
 # global variables
 cycleIndexPos = 0
 cycleCounter  = 0
+TotalCounter  = 0
 
 previousPosition = None
 currentPosition  = None
@@ -26,7 +27,7 @@ buttonState      = None
 
 powerDownTrigger = False
 ResetTrigger     = False
-isEepromReadNeed = True
+isConfigReadNeed = True
 cycleIndexPosMiddle = False
 
 lastButtonState  = HIGH
@@ -70,9 +71,14 @@ def printCurrentTime(row: int):
     # time.sleep(0.1)
 
 
-# Print the count value
-def printCount(row: int, count: int):
-    lcd.write(f"Count: {count}", row = row, padding = True)
+# Print the current count value
+def printCurrentCount(row: int, count: int):
+    lcd.write(f"Current: {count}", row = row, padding = True)
+
+
+# Print the total count value
+def printTotalCount(row: int, count: int):
+    lcd.write(f" Total : {count}", row = row, padding = True)
 
 
 #  This is the void setup() function just like Arduino code
@@ -80,6 +86,7 @@ def setup():
     global cycleIndexPos
     global previousPosition
     global cycleCounter
+    global TotalCounter
 
     startIntroPrint()
     gpioInilitization()
@@ -107,7 +114,9 @@ def setup():
     ########## TEST END## ###############
 
     cycleCounter = getCycleCount()
-    printCount(row = ROW_NO_2, count = cycleCounter)
+    TotalCounter = getTotalCount()
+    printCurrentCount(row = ROW_NO_2, count = cycleCounter)
+    printTotalCount(row = ROW_NO_3, count = TotalCounter)
 
     gpio.digitalWrite(ON_BOARD_LED_PIN, LOW)
 
@@ -115,11 +124,12 @@ def setup():
 # This is the void loop() function just like Arduino code
 def loop():
     global powerDownTrigger
-    global isEepromReadNeed
+    global isConfigReadNeed
     global previousPosition
     global cycleIndexPos
     global currentPosition
     global cycleCounter
+    global TotalCounter
     global cycleIndexPosMiddle
     global ResetBtnReading
     global lastButtonState
@@ -133,22 +143,22 @@ def loop():
             printCurrentTime(ROW_NO_0)
 
         # If power down condition happend
-        if gpio.digitalRead(POWER_LINE_DETECT_PIN) == LOW:
-            lcd.turnOffBacklight()
-            lcd.clean()
-            powerDownTrigger = True
+        # if gpio.digitalRead(POWER_LINE_DETECT_PIN) == LOW:
+        #     lcd.turnOffBacklight()
+        #     lcd.clean()
+        #     powerDownTrigger = True
 
-            if not isEepromReadNeed:
-                setCycleCount(cycleCounter)
-                isEepromReadNeed = True
-            continue
-        else:
-            lcd.turnOnBacklight()
-            powerDownTrigger = False
-            if isEepromReadNeed:
-                cycleCounter = getCycleCount()
-                lcd.write(" "*LCD_MODULE_NO_OF_COLUMN, row = ROW_NO_3)
-                isEepromReadNeed = False
+        #     if not isConfigReadNeed:
+        #         setCycleCount(cycleCounter)
+        #         isConfigReadNeed = True
+        #     continue
+        # else:
+        #     lcd.turnOnBacklight()
+        #     powerDownTrigger = False
+        #     if isConfigReadNeed:
+        #         cycleCounter = getCycleCount()
+        #         lcd.write(" "*LCD_MODULE_NO_OF_COLUMN, row = ROW_NO_3)
+        #         isConfigReadNeed = False
 
         # Reading the gpio pin for the switchs
         if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
@@ -175,12 +185,20 @@ def loop():
                 else:
                     pass
 
+        # update current and total count value if config update avaialabe
+        if getConfigUpdateStatus() == CONFIG_UPDATE_AVAILABLE:
+                cycleCounter = getCycleCount()
+                TotalCounter = getTotalCount()
+                setConfigUpdateStatus(NO_CONFIG_UPDATE)
+                printTotalCount(row = ROW_NO_3, count = TotalCounter)
+
+
         # Update the count in the LCD
         previousPosition = currentPosition
-        printCount(row = ROW_NO_2, count = cycleCounter)
+        printCurrentCount(row = ROW_NO_2, count = cycleCounter)
 
         # If reach the full count number then turn on the Finish LED
-        if cycleCounter >= 7500000:
+        if cycleCounter >= TotalCounter:
             gpio.digitalWrite(ON_BOARD_LED_PIN, HIGH)
             cycleCounter = 0
 
