@@ -41,14 +41,42 @@ def createRtDbFile():
 
 def getCycleCount():
     rtData = getYamlData(RT_DB_FILE)
-    cycleCount = rtData.get("cycleCount")
+    cycleCount = int(rtData.get("cycleCount"))
     if cycleCount == None:
         cycleCount = 0
 
     return cycleCount
 
 
+def getTotalCount():
+    rtData = getYamlData(RT_DB_FILE)
+    totalCount = int(rtData.get("maxCount"))
+    if totalCount == None:
+        configData = getYamlData(CONFIG_YAML_FILE)
+        totalCount = int(configData.get("maxCount"))
+
+    if totalCount == None:
+        totalCount = 0
+
+    return totalCount
+
+
 def setCycleCount(count: int):
     rtData = getYamlData(RT_DB_FILE)
     rtData["cycleCount"] = count
+    setYamlData(RT_DB_FILE, rtData)
+
+
+def getConfigUpdateStatus():
+    rtData = getYamlData(RT_DB_FILE)
+    updateNeeded = int(rtData.get("updateNeeded"))
+    if updateNeeded == None:
+        updateNeeded = NO_CONFIG_UPDATE
+
+    return updateNeeded
+
+
+def setConfigUpdateStatus(status):
+    rtData = getYamlData(RT_DB_FILE)
+    rtData["updateNeeded"] = status
     setYamlData(RT_DB_FILE, rtData)

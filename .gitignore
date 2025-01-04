@@ -1,3 +1,6 @@
 Script/__pycache__
 .lgd-nfy0
 rtDb.json
+Web/vendor
+Web/composer.*
+*.service
