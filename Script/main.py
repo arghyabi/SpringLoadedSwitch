@@ -175,15 +175,17 @@ def loop():
 
         #  According to the position, update the count number
         if currentPosition != previousPosition:
-            if currentPosition == POSITION_LEFT or POSITION_LEFT == POSITION_RIGHT:
+            if currentPosition == POSITION_LEFT or currentPosition == POSITION_RIGHT:
                 if cycleIndexPos == currentPosition:
                     cycleCounter += 1
-                elif currentPosition == POSITION_MIDDLE:
-                    if cycleIndexPosMiddle and (cycleIndexPos == currentPosition):
-                        cycleCounter += 1
-                    cycleIndexPosMiddle = not cycleIndexPosMiddle
-                else:
-                    pass
+            elif currentPosition == POSITION_MIDDLE:
+                if cycleIndexPosMiddle and (cycleIndexPos == currentPosition):
+                    cycleCounter += 1
+                cycleIndexPosMiddle = not cycleIndexPosMiddle
+            else:
+                pass
+
+        previousPosition = currentPosition
 
         # update current and total count value if config update avaialabe
         if getConfigUpdateStatus() == CONFIG_UPDATE_AVAILABLE:
@@ -192,9 +194,7 @@ def loop():
                 setConfigUpdateStatus(NO_CONFIG_UPDATE)
                 printTotalCount(row = ROW_NO_3, count = TotalCounter)
 
-
         # Update the count in the LCD
-        previousPosition = currentPosition
         printCurrentCount(row = ROW_NO_2, count = cycleCounter)
 
         # If reach the full count number then turn on the Finish LED
