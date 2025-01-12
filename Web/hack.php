@@ -16,7 +16,7 @@ $totalCount   = getTotalCountValue();
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
+  <header class="hackHeader">
     <h1>Spring Loaded Switch Simulator <?php echo $appVersion; ?></h1>
   </header>
   <main>
@@ -25,9 +25,16 @@ $totalCount   = getTotalCountValue();
       <input type="number" id="totalCount" min="1"/>
       <button id="setCountBtn" class="totalCountBtn" onclick = "updateTotalCountValue()">Set Total Count</button>
     </div>
+    <div class="controls">
+      <label for="currentCount">Set Current Count:</label>
+      <input type="number" id="currentCount" min="0" />
+      <button id="setCurrentBtn" class="currentCountBtn" onclick = "updateCurrentCountValue()">Set Current Count</button>
+    </div>
     <div class="switch-container">
       <h2 id="countDisplay">Count: <?php echo $currentCount; ?> / <?php echo $totalCount; ?></h2>
     </div>
+    <br/>
+    <a href="/"><h1>Home</h1></a>
   </main>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
