@@ -17,6 +17,14 @@ header {
     text-align: center;
 }
 
+.hackHeader {
+    background-color: #d1240a;
+    color: white;
+    padding: 0rem;
+    width: 100%;
+    text-align: center;
+}
+
 main {
     width: 90%;
     max-width: 400px;
