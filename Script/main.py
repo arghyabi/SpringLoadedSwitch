@@ -53,6 +53,8 @@ def startIntroPrint():
 # This is the gpio initlization
 def gpioInilitization():
     gpio.pinMode(ON_BOARD_LED_PIN, OUTPUT)
+    gpio.pinMode(GPIO_3V3_1_PIN, OUTPUT)
+    gpio.pinMode(GPIO_3V3_2_PIN, OUTPUT)
 
     gpio.pinMode(MICRO_SWITCH_S1_NC_PIN, INPUT)
     gpio.pinMode(MICRO_SWITCH_S1_NO_PIN, INPUT)
@@ -63,6 +65,9 @@ def gpioInilitization():
     gpio.pinMode(RESET_PUSH_SWITCH_PIN, INPUT)
 
     gpio.pinMode(ON_BOARD_LED_PIN, OUTPUT)
+
+    gpio.digitalWrite(GPIO_3V3_1_PIN, HIGH)
+    gpio.digitalWrite(GPIO_3V3_2_PIN, HIGH)
 
 
 # Time print function

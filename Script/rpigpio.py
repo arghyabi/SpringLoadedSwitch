@@ -7,7 +7,8 @@ class RpiGpio:
 
 
     def init(self):
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD)
 
 
     def deinit(self):
@@ -36,6 +37,8 @@ class RpiGpio:
 
         if pullUpDown != None:
             GPIO.setup(pin, _state, pull_up_down = _pullUpDown)
+        elif state == OUTPUT:
+            GPIO.setup(pin, _state, initial = GPIO.LOW)
         else:
             GPIO.setup(pin, _state)
 
@@ -48,13 +51,12 @@ class RpiGpio:
     def digitalWrite(self, pin: int, state: bool):
         _state = None
 
-        # Mapping with INPUT OUTPUT macro with GPIO.IN GPIO.OUT
-        if state == INPUT:
-            _state = GPIO.IN
-        elif state == OUTPUT:
-            _state = GPIO.OUT
+        # Mapping with HIGH LOW macro with GPIO.HIGH GPIO.LOW
+        if state == HIGH:
+            _state = GPIO.HIGH
+        elif state == LOW:
+            _state = GPIO.LOW
         else:
             raise Exception("Wrong pin status!!")
 
         GPIO.output(pin, _state)
-

@@ -81,17 +81,17 @@ button:hover {
 }
 
 .totalCountBtn {
-  background-color: mediumslateblue;
+    background-color: mediumslateblue;
 }
 
 .totalCountBtn:hover {
-  background-color: blueviolet;
+    background-color: blueviolet;
 }
 
 .currentCountBtn {
-  background-color: chocolate;
+    background-color: chocolate;
 }
 
 .currentCountBtn:hover {
-  background-color: coral;
+    background-color: coral;
 }
