@@ -25,7 +25,6 @@ currentPosition  = None
 ResetBtnReading  = None
 buttonState      = None
 
-powerDownTrigger = False
 ResetTrigger     = False
 isConfigReadNeed = True
 cycleIndexPosMiddle = False
@@ -56,10 +55,10 @@ def gpioInilitization():
     gpio.pinMode(GPIO_3V3_1_PIN, OUTPUT)
     gpio.pinMode(GPIO_3V3_2_PIN, OUTPUT)
 
-    gpio.pinMode(MICRO_SWITCH_S1_NC_PIN, INPUT)
-    gpio.pinMode(MICRO_SWITCH_S1_NO_PIN, INPUT)
-    gpio.pinMode(MICRO_SWITCH_S2_NC_PIN, INPUT)
-    gpio.pinMode(MICRO_SWITCH_S2_NO_PIN, INPUT)
+    gpio.pinMode(MICRO_SWITCH_S1_NC_PIN, INPUT, PULL_DOWN)
+    gpio.pinMode(MICRO_SWITCH_S1_NO_PIN, INPUT, PULL_DOWN)
+    gpio.pinMode(MICRO_SWITCH_S2_NC_PIN, INPUT, PULL_DOWN)
+    gpio.pinMode(MICRO_SWITCH_S2_NO_PIN, INPUT, PULL_DOWN)
 
     gpio.pinMode(POWER_LINE_DETECT_PIN, INPUT)
     gpio.pinMode(RESET_PUSH_SWITCH_PIN, INPUT)
@@ -76,14 +75,9 @@ def printCurrentTime(row: int):
     # time.sleep(0.1)
 
 
-# Print the current count value
-def printCurrentCount(row: int, count: int):
-    lcd.write(f"Current: {count}", row = row, padding = True)
-
-
-# Print the total count value
-def printTotalCount(row: int, count: int):
-    lcd.write(f" Total : {count}", row = row, padding = True)
+# Print the count value
+def printCountValue(row: int, currentCount: int, totalCount: int):
+    lcd.write(f"Test:{currentCount}/{TotalCounter}", row = row, padding = True)
 
 
 #  This is the void setup() function just like Arduino code
@@ -97,15 +91,24 @@ def setup():
     gpioInilitization()
     createRtDbFile()
 
-    if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
+    lcd.write("Model: Type-D", row = ROW_NO_1, center = True)
+
+    #################################################
+    ##         S1_NO     S1_NC     S2_NO    S2_NC  ##
+    ## LEFT      0         1         1       0     ##
+    ## MID       1         0         1       0     ##
+    ## RIGHT     1         0         0       1     ##
+    #################################################
+
+    if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
         previousPosition = POSITION_LEFT
         cycleIndexPos    = POSITION_LEFT
 
-    if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
+    if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
         previousPosition = POSITION_MIDDLE
         cycleIndexPos    = POSITION_MIDDLE
 
-    if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
+    if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
         previousPosition = POSITION_RIGHT
         cycleIndexPos    = POSITION_RIGHT
 
@@ -120,15 +123,14 @@ def setup():
 
     cycleCounter = getCycleCount()
     TotalCounter = getTotalCount()
-    printCurrentCount(row = ROW_NO_2, count = cycleCounter)
-    printTotalCount(row = ROW_NO_3, count = TotalCounter)
+    printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
+    setCycleCount(cycleCounter)
 
     gpio.digitalWrite(ON_BOARD_LED_PIN, LOW)
 
 
 # This is the void loop() function just like Arduino code
 def loop():
-    global powerDownTrigger
     global isConfigReadNeed
     global previousPosition
     global cycleIndexPos
@@ -144,48 +146,47 @@ def loop():
     global lastDebounceTime
 
     while True:
-        if not powerDownTrigger:
-            printCurrentTime(ROW_NO_0)
+        printCurrentTime(ROW_NO_0)
 
-        # If power down condition happend
-        # if gpio.digitalRead(POWER_LINE_DETECT_PIN) == LOW:
-        #     lcd.turnOffBacklight()
-        #     lcd.clean()
-        #     powerDownTrigger = True
-
-        #     if not isConfigReadNeed:
-        #         setCycleCount(cycleCounter)
-        #         isConfigReadNeed = True
-        #     continue
-        # else:
-        #     lcd.turnOnBacklight()
-        #     powerDownTrigger = False
-        #     if isConfigReadNeed:
-        #         cycleCounter = getCycleCount()
-        #         lcd.write(" "*LCD_MODULE_NO_OF_COLUMN, row = ROW_NO_3)
-        #         isConfigReadNeed = False
+        #################################################
+        ##         S1_NO     S1_NC     S2_NO    S2_NC  ##
+        ## LEFT      0         1         1       0     ##
+        ## MID       1         0         1       0     ##
+        ## RIGHT     1         0         0       1     ##
+        #################################################
 
         # Reading the gpio pin for the switchs
-        if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
-            currentPosition = POSITION_LEFT
-            lcd.write("Position Left  ", row = ROW_NO_1)
-
-        if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
-            currentPosition = POSITION_MIDDLE
-            lcd.write("Position Middle", row = ROW_NO_1)
-
         if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
+            currentPosition = POSITION_LEFT
+            lcd.write("Position Left  ", row = ROW_NO_2)
+            print("Position Left")
+
+        if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
+            currentPosition = POSITION_MIDDLE
+            lcd.write("Position Middle", row = ROW_NO_2)
+            print("Position Middle")
+
+        if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
             currentPosition = POSITION_RIGHT
-            lcd.write("Position Right ", row = ROW_NO_1)
+            lcd.write("Position Right ", row = ROW_NO_2)
+            print("Position Right")
+
+        print("S1_NO:", gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN), end="\t")
+        print("S1_NC:", gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN), end="\t")
+        print("S2_NO:", gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN), end="\t")
+        print("S2_NC:", gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN))
 
         #  According to the position, update the count number
+        countUpdate = False
         if currentPosition != previousPosition:
             if currentPosition == POSITION_LEFT or currentPosition == POSITION_RIGHT:
                 if cycleIndexPos == currentPosition:
                     cycleCounter += 1
+                    countUpdate = True
             elif currentPosition == POSITION_MIDDLE:
                 if cycleIndexPosMiddle and (cycleIndexPos == currentPosition):
                     cycleCounter += 1
+                    countUpdate = True
                 cycleIndexPosMiddle = not cycleIndexPosMiddle
             else:
                 pass
@@ -194,13 +195,16 @@ def loop():
 
         # update current and total count value if config update avaialabe
         if getConfigUpdateStatus() == CONFIG_UPDATE_AVAILABLE:
-                cycleCounter = getCycleCount()
-                TotalCounter = getTotalCount()
-                setConfigUpdateStatus(NO_CONFIG_UPDATE)
-                printTotalCount(row = ROW_NO_3, count = TotalCounter)
+            cycleCounter = getCycleCount()
+            TotalCounter = getTotalCount()
+            setConfigUpdateStatus(NO_CONFIG_UPDATE)
+            printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
 
         # Update the count in the LCD
-        printCurrentCount(row = ROW_NO_2, count = cycleCounter)
+        if countUpdate:
+            printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
+            setCycleCount(cycleCounter)
+            countUpdate = False
 
         # If reach the full count number then turn on the Finish LED
         if cycleCounter >= TotalCounter:
@@ -218,7 +222,7 @@ def loop():
                 buttonState = ResetBtnReading
 
                 if buttonState == LOW:
-                    lcd.write("Count Reseting...   ", row = ROW_NO_3)
+                    lcd.write("Count Reseting...", row = ROW_NO_3, padding = True)
                     ResetTrigger = True
 
         lastButtonState = ResetBtnReading
@@ -230,6 +234,8 @@ def loop():
             ResetTrigger = False
             time.sleep(2)
             lcd.write(" "*LCD_MODULE_NO_OF_COLUMN, row = ROW_NO_3)
+            time.sleep(1)
+            printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
 
 
 # Entry point main function
