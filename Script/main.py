@@ -60,6 +60,10 @@ def gpioInilitization():
     gpio.pinMode(MICRO_SWITCH_S2_NC_PIN, INPUT, PULL_DOWN)
     gpio.pinMode(MICRO_SWITCH_S2_NO_PIN, INPUT, PULL_DOWN)
 
+    gpio.pinMode(POSITION_RIGHT_LED_PIN, OUTPUT)
+    gpio.pinMode(POSITION_MIDDLE_LED_PIN, OUTPUT)
+    gpio.pinMode(POSITION_LEFT_LED_PIN, OUTPUT)
+
     gpio.pinMode(POWER_LINE_DETECT_PIN, INPUT)
     gpio.pinMode(RESET_PUSH_SWITCH_PIN, INPUT)
 
@@ -67,6 +71,10 @@ def gpioInilitization():
 
     gpio.digitalWrite(GPIO_3V3_1_PIN, HIGH)
     gpio.digitalWrite(GPIO_3V3_2_PIN, HIGH)
+
+    gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
+    gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
+    gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
 
 
 # Time print function
@@ -78,6 +86,29 @@ def printCurrentTime(row: int):
 # Print the count value
 def printCountValue(row: int, currentCount: int, totalCount: int):
     lcd.write(f"Test:{currentCount}/{TotalCounter}", row = row, padding = True)
+
+
+# Turn on only the position LED
+def showPositionLED(position: int):
+    if position == POSITION_LEFT:
+        gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
+        gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
+        gpio.digitalWrite(POSITION_LEFT_LED_PIN, HIGH)
+
+    elif position == POSITION_RIGHT:
+        gpio.digitalWrite(POSITION_RIGHT_LED_PIN, HIGH)
+        gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
+        gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
+
+    elif position == POSITION_MIDDLE:
+        gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
+        gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, HIGH)
+        gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
+
+    else:
+        gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
+        gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
+        gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
 
 
 #  This is the void setup() function just like Arduino code
@@ -175,6 +206,9 @@ def loop():
         print("S1_NC:", gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN), end="\t")
         print("S2_NO:", gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN), end="\t")
         print("S2_NC:", gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN))
+
+        # Turn on the postion LED
+        showPositionLED(currentPosition)
 
         #  According to the position, update the count number
         countUpdate = False
