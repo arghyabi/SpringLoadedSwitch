@@ -11,8 +11,6 @@ RESET_PUSH_SWITCH_PIN        = 37
 
 ON_BOARD_LED_PIN             = 36
 
-POWER_LINE_DETECT_PIN        = 32
-
 GPIO_3V3_1_PIN               = 38
 GPIO_3V3_2_PIN               = 40
 

@@ -64,7 +64,6 @@ def gpioInilitization():
     gpio.pinMode(POSITION_MIDDLE_LED_PIN, OUTPUT)
     gpio.pinMode(POSITION_LEFT_LED_PIN, OUTPUT)
 
-    gpio.pinMode(POWER_LINE_DETECT_PIN, INPUT)
     gpio.pinMode(RESET_PUSH_SWITCH_PIN, INPUT)
 
     gpio.pinMode(ON_BOARD_LED_PIN, OUTPUT)
