@@ -27,7 +27,10 @@ def setYamlData(yamlFile, data):
 
 def getAppVersion():
     configData = getYamlData(CONFIG_YAML_FILE)
-    return configData.get("appVersion")
+    if configData:
+        return configData.get("appVersion")
+    else:
+        return "0.0.0.0000"
 
 
 def createRtDbFile():
@@ -41,42 +44,52 @@ def createRtDbFile():
 
 def getCycleCount():
     rtData = getYamlData(RT_DB_FILE)
-    cycleCount = rtData.get("cycleCount")
-    if cycleCount == None:
-        cycleCount = 0
+    if rtData:
+        cycleCount = rtData.get("cycleCount")
+        if cycleCount == None:
+            cycleCount = 0
 
-    return int(cycleCount)
+        return int(cycleCount)
+    else:
+        return 0
 
 
 def getTotalCount():
     rtData = getYamlData(RT_DB_FILE)
-    totalCount = rtData.get("maxCount")
-    if totalCount == None:
-        configData = getYamlData(CONFIG_YAML_FILE)
-        totalCount = configData.get("maxCount")
+    if rtData:
+        totalCount = rtData.get("maxCount")
+        if totalCount == None:
+            configData = getYamlData(CONFIG_YAML_FILE)
+            if configData:
+                totalCount = configData.get("maxCount")
 
-    if totalCount == None:
-        totalCount = 0
+            if totalCount == None:
+                totalCount = 0
 
-    return int(totalCount)
+        return int(totalCount)
+    return 0
 
 
 def setCycleCount(count: int):
     rtData = getYamlData(RT_DB_FILE)
-    rtData["cycleCount"] = count
-    setYamlData(RT_DB_FILE, rtData)
+    if rtData:
+        rtData["cycleCount"] = count
+        setYamlData(RT_DB_FILE, rtData)
 
 
 def getConfigUpdateStatus():
     rtData = getYamlData(RT_DB_FILE)
-    updateNeeded = rtData.get("updateNeeded")
-    if updateNeeded == None:
-        updateNeeded = NO_CONFIG_UPDATE
+    if rtData:
+        updateNeeded = rtData.get("updateNeeded")
+        if updateNeeded == None:
+            updateNeeded = NO_CONFIG_UPDATE
 
-    return int(updateNeeded)
+        return int(updateNeeded)
+    return 0
 
 
 def setConfigUpdateStatus(status):
     rtData = getYamlData(RT_DB_FILE)
-    rtData["updateNeeded"] = status
-    setYamlData(RT_DB_FILE, rtData)
+    if rtData:
+        rtData["updateNeeded"] = status
+        setYamlData(RT_DB_FILE, rtData)

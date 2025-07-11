@@ -88,7 +88,7 @@ def printCountValue(row: int, currentCount: int, totalCount: int):
 
 
 # Turn on only the position LED
-def showPositionLED(position: int):
+def showPositionLED(position: int|None):
     if position == POSITION_LEFT:
         gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
         gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)

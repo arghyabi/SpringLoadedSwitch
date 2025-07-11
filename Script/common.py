@@ -6,14 +6,14 @@ BASE_PATH               = os.path.dirname(SCRIPT_PATH)
 CONFIG_YAML_FILE        = os.path.join(BASE_PATH, "config.yaml")
 RT_DB_FILE              = os.path.join(BASE_PATH, "rtDb.json")
 
-INPUT                   = 0
-OUTPUT                  = 1
+INPUT                   = False
+OUTPUT                  = True
 
-PULL_UP                 = 0
-PULL_DOWN               = 1
+PULL_UP                 = False
+PULL_DOWN               = True
 
-HIGH                    = 1
-LOW                     = 0
+HIGH                    = True
+LOW                     = False
 
 LCD_MODULE_NO_OF_ROW    = 4
 LCD_MODULE_NO_OF_COLUMN = 20
