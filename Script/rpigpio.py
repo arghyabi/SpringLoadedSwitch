@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO # type: ignore
 from common import *
 
 class RpiGpio:
@@ -15,7 +15,7 @@ class RpiGpio:
         GPIO.cleanup()
 
 
-    def pinMode(self, pin: int, state: bool, pullUpDown: bool = None):
+    def pinMode(self, pin: int, state: bool, pullUpDown: bool|None = None):
         _state      = None
         _pullUpDown = None
 
