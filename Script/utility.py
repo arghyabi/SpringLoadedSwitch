@@ -40,6 +40,14 @@ def createRtDbFile():
         }
 
         setYamlData(RT_DB_FILE, blankData)
+    else:
+        configData = getYamlData(RT_DB_FILE)
+        if configData == None or configData == "":
+            print(f"Config data : '{configData}'")
+            print(f"Re-creating database..")
+            os.remove(RT_DB_FILE)
+            createRtDbFile()
+
 
 
 def getCycleCount():

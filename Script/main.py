@@ -39,6 +39,7 @@ def startIntroPrint():
     lcd.write("SPRING LOADED", row = ROW_NO_0, center = True)
     lcd.write("SWITCH TESTER", row = ROW_NO_1, center = True)
     appVersion = getAppVersion()
+    print(f"Application version: {appVersion}")
     lcd.write(f"Version: {appVersion}", row = ROW_NO_3, padding = True)
     time.sleep(3)
     lcd.clean()
@@ -78,13 +79,13 @@ def gpioInilitization():
 
 # Time print function
 def printCurrentTime(row: int):
-    lcd.write(datetime.now().strftime('%I:%M:%S %p %d/%m/%y'), row = ROW_NO_0, padding = True)
+    lcd.write(datetime.now().strftime('%I:%M:%S %p %d/%m/%y'), row = row, padding = True)
     # time.sleep(0.1)
 
 
 # Print the count value
 def printCountValue(row: int, currentCount: int, totalCount: int):
-    lcd.write(f"Test:{currentCount}/{TotalCounter}", row = row, padding = True)
+    lcd.write(f"Test:{currentCount}/{totalCount}", row = row, padding = True)
 
 
 # Turn on only the position LED
@@ -118,8 +119,11 @@ def setup():
     global TotalCounter
 
     startIntroPrint()
+    print("Intro print done!")
     gpioInilitization()
+    print("GPIO initilization done!")
     createRtDbFile()
+    print("Dabase creation done!")
 
     lcd.write("Model: Type-D", row = ROW_NO_1, center = True)
 
@@ -133,14 +137,17 @@ def setup():
     if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
         previousPosition = POSITION_LEFT
         cycleIndexPos    = POSITION_LEFT
+        print("Initial position: LEFT")
 
     if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
         previousPosition = POSITION_MIDDLE
         cycleIndexPos    = POSITION_MIDDLE
+        print("Initial position: MIDDLE")
 
     if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
         previousPosition = POSITION_RIGHT
         cycleIndexPos    = POSITION_RIGHT
+        print("Initial position: RIGHT")
 
     ########## TEST BEGIN ###############
     if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and  gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN) and\
@@ -149,10 +156,16 @@ def setup():
         previousPosition = POSITION_MIDDLE
         cycleIndexPos    = POSITION_MIDDLE
         print("Probably No switch found; All pin are HIGH ... !!")
+
+    if previousPosition == None and cycleIndexPos == None:
+        raise Exception("Someting Wrong!! Not able to read switch posiiton!!")
+
     ########## TEST END## ###############
 
     cycleCounter = getCycleCount()
     TotalCounter = getTotalCount()
+    print(f"Current Counter: {cycleCounter}")
+    print(f"Max Counter    : {TotalCounter}")
     printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
     setCycleCount(cycleCounter)
 
@@ -273,7 +286,9 @@ def loop():
 
 # Entry point main function
 def main():
+    print("Entering initial setup.")
     setup()
+    print("Entering main loop.")
     loop()
 
 
