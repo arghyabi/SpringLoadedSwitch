@@ -67,8 +67,6 @@ def gpioInilitization():
 
     gpio.pinMode(RESET_PUSH_SWITCH_PIN, INPUT)
 
-    gpio.pinMode(ON_BOARD_LED_PIN, OUTPUT)
-
     gpio.digitalWrite(GPIO_3V3_1_PIN, HIGH)
     gpio.digitalWrite(GPIO_3V3_2_PIN, HIGH)
 
@@ -276,6 +274,7 @@ def loop():
         # If reset button pressed then clean the old stuffs
         if ResetTrigger:
             cycleCounter = 0
+            gpio.digitalWrite(ON_BOARD_LED_PIN, LOW)
             setCycleCount(cycleCounter)
             ResetTrigger = False
             time.sleep(2)
