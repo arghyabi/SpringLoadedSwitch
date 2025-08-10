@@ -31,3 +31,6 @@ WEBSITE_FOLDER          = "Web"
 
 CONFIG_UPDATE_AVAILABLE = True
 NO_CONFIG_UPDATE        = False
+
+SWITCH_MODEL_DOUBLE     = "Type-D"
+SWITCH_MODEL_SINGLE     = "Type-S"

@@ -12,21 +12,27 @@ class Lcd20x4:
 
 
     def init(self):
-        self._lcd = CharLCD(
-            i2c_expander = 'PCF8574',
-            address      = self.i2cAddress,
-            port         = self.port,
-            cols         = self.columns,
-            rows         = self.rows,
-            dotsize      = self.dotSize)
+        try:
+            self._lcd = CharLCD(
+                i2c_expander = 'PCF8574',
+                address      = self.i2cAddress,
+                port         = self.port,
+                cols         = self.columns,
+                rows         = self.rows,
+                dotsize      = self.dotSize)
+        except Exception as e:
+            print(f"Error initializing LCD: {e}")
+            self._lcd = None
         self.clean()
 
     def clean(self):
-        self._lcd.clear()
+        if self._lcd:
+            self._lcd.clear()
 
 
     def setLcdCursor(self, row: int, column: int):
-        self._lcd.cursor_pos = (row, column)
+        if self._lcd:
+            self._lcd.cursor_pos = (row, column)
 
 
     def write(self,
@@ -54,13 +60,17 @@ class Lcd20x4:
 
         if row != -1:
             self.setLcdCursor(row, column)
-
-        self._lcd.write_string(text)
+        if self._lcd:
+            self._lcd.write_string(text)
+        else:
+            print(f"LCD: {text}")
 
 
     def turnOffBacklight(self):
-        self._lcd.backlight_enabled = False
+        if self._lcd:
+            self._lcd.backlight_enabled = False
 
 
     def turnOnBacklight(self):
-        self._lcd.backlight_enabled = True
+        if self._lcd:
+            self._lcd.backlight_enabled = True
