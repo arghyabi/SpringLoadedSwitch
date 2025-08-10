@@ -101,3 +101,14 @@ def setConfigUpdateStatus(status):
     if rtData:
         rtData["updateNeeded"] = status
         setYamlData(RT_DB_FILE, rtData)
+
+
+def getSwitchModel():
+    switchModel = SWITCH_MODEL_DOUBLE
+    rtData = getYamlData(RT_DB_FILE)
+    if rtData:
+        switchModel = rtData.get("switchModel")
+        if switchModel == None:
+            switchModel = SWITCH_MODEL_DOUBLE
+
+    return switchModel
