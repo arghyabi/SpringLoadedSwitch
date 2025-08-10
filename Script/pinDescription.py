@@ -9,9 +9,11 @@ POSITION_RIGHT_LED_PIN       = 15
 
 RESET_PUSH_SWITCH_PIN        = 37
 
+MOTOR_ON_OFF_PIN             = 32
+
 ON_BOARD_LED_PIN             = 36
 
 GPIO_3V3_1_PIN               = 38
 GPIO_3V3_2_PIN               = 40
 
-LCD_MODULE_ADDRESS          = 0x27
+LCD_MODULE_ADDRESS           = 0x27
