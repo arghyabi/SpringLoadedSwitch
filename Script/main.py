@@ -50,8 +50,8 @@ def startIntroPrint():
     time.sleep(1)
 
 
-# This is the gpio initlization
-def gpioInilitization():
+# This is the gpio initialization
+def gpioInitialization():
     gpio.pinMode(ON_BOARD_LED_PIN, OUTPUT)
     gpio.pinMode(GPIO_3V3_1_PIN, OUTPUT)
     gpio.pinMode(GPIO_3V3_2_PIN, OUTPUT)
@@ -65,6 +65,8 @@ def gpioInilitization():
     gpio.pinMode(POSITION_MIDDLE_LED_PIN, OUTPUT)
     gpio.pinMode(POSITION_LEFT_LED_PIN, OUTPUT)
 
+    gpio.pinMode(MOTOR_ON_OFF_PIN, OUTPUT)
+
     gpio.pinMode(RESET_PUSH_SWITCH_PIN, INPUT)
 
     gpio.digitalWrite(GPIO_3V3_1_PIN, HIGH)
@@ -73,6 +75,8 @@ def gpioInilitization():
     gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
     gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
     gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
+
+    gpio.digitalWrite(MOTOR_ON_OFF_PIN, LOW)
 
 
 # Time print function
@@ -118,10 +122,10 @@ def setup():
 
     startIntroPrint()
     print("Intro print done!")
-    gpioInilitization()
-    print("GPIO initilization done!")
+    gpioInitialization()
+    print("GPIO initialization done!")
     createRtDbFile()
-    print("Dabase creation done!")
+    print("Database creation done!")
 
     lcd.write("Model: Type-D", row = ROW_NO_1, center = True)
 
@@ -187,6 +191,7 @@ def loop():
     global lastDebounceTime
 
     while True:
+        gpio.digitalWrite(MOTOR_ON_OFF_PIN, HIGH)
         printCurrentTime(ROW_NO_0)
 
         #################################################
@@ -253,6 +258,9 @@ def loop():
         # If reach the full count number then turn on the Finish LED
         if cycleCounter >= TotalCounter:
             gpio.digitalWrite(ON_BOARD_LED_PIN, HIGH)
+            gpio.digitalWrite(MOTOR_ON_OFF_PIN, LOW)
+            lcd.write("Count Finished!", row = ROW_NO_3, padding = True)
+            print("Count Finished!")
             cycleCounter = 0
 
         # Reset button debounce logic
@@ -273,6 +281,7 @@ def loop():
 
         # If reset button pressed then clean the old stuffs
         if ResetTrigger:
+            gpio.digitalWrite(MOTOR_ON_OFF_PIN, LOW)
             cycleCounter = 0
             gpio.digitalWrite(ON_BOARD_LED_PIN, LOW)
             setCycleCount(cycleCounter)
