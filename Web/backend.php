@@ -88,4 +88,44 @@ function updateCurrentCountValue($count)
     $rtConfig["updateNeeded"] = 1;
     setRtConfig($rtConfig);
 }
+
+
+// update switch model
+function updateSwitchModel($model)
+{
+    $rtConfig = getRtConfig();
+    $rtConfig["switchModel"] = $model;
+    $rtConfig["updateNeeded"] = 1;
+    setRtConfig($rtConfig);
+}
+
+
+// toggle motor state
+function toggleMotorState()
+{
+    $rtConfig = getRtConfig();
+    if (isset($rtConfig["motorStatus"])) {
+        $rtConfig["motorStatus"] = $rtConfig["motorStatus"] == 1 ? 0 : 1;
+    } else {
+        $rtConfig["motorStatus"] = 1; // Default to ON if not set
+    }
+    $rtConfig["updateNeeded"] = 1;
+    setRtConfig($rtConfig);
+    return $rtConfig["motorStatus"];
+}
+
+
+// get motor status
+function getMotorStatus()
+{
+    $rtConfig = getRtConfig();
+    return isset($rtConfig['motorStatus']) ? $rtConfig['motorStatus'] : 0; // Default to Off
+}
+
+// get switch type
+function getSwitchType()
+{
+    $rtConfig = getRtConfig();
+    return isset($rtConfig['switchModel']) ? $rtConfig['switchModel'] : 'Type-D'; // Default to Type-D
+}
 ?>

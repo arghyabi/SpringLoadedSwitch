@@ -36,7 +36,9 @@ def getAppVersion():
 def createRtDbFile():
     if not os.path.exists(RT_DB_FILE):
         blankData = {
-            "cycleCount": 0
+            "cycleCount": 0,
+            "switchModel": SWITCH_MODEL_DOUBLE,
+            "motorStatus": 0
         }
 
         setYamlData(RT_DB_FILE, blankData)
@@ -112,3 +114,23 @@ def getSwitchModel():
             switchModel = SWITCH_MODEL_DOUBLE
 
     return switchModel
+
+
+def getMotorControlStatus():
+    motorStatus = LOW
+    rtData = getYamlData(RT_DB_FILE)
+    if rtData:
+        motorStatus = rtData.get("motorStatus")
+        if motorStatus == None:
+            motorStatus = LOW
+
+    return motorStatus
+
+
+def setMotorControlStatus(status):
+    status = 1 if status == HIGH else 0
+
+    rtData = getYamlData(RT_DB_FILE)
+    if rtData:
+        rtData["motorStatus"] = status
+        setYamlData(RT_DB_FILE, rtData)

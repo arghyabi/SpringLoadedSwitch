@@ -173,7 +173,7 @@ def doubleSwitchSetup(model: str):
 
 
 # This is the void loop() function just like Arduino code
-def doubleSwitchLoop():
+def doubleSwitchLoop(model: str):
     global isConfigReadNeed
     global previousPosition
     global cycleIndexPos
@@ -188,8 +188,11 @@ def doubleSwitchLoop():
     global ResetTrigger
     global lastDebounceTime
 
+    rtn = LOOP_RTN_TYPE_ERROR
+
     while True:
         gpio.digitalWrite(MOTOR_ON_OFF_PIN, HIGH)
+        setMotorControlStatus(HIGH)
         printCurrentTime(ROW_NO_0)
 
         #################################################
@@ -244,8 +247,14 @@ def doubleSwitchLoop():
         if getConfigUpdateStatus() == CONFIG_UPDATE_AVAILABLE:
             cycleCounter = getCycleCount()
             TotalCounter = getTotalCount()
+            motorStatus  = getMotorControlStatus()
+            switchModel  = getSwitchModel()
             setConfigUpdateStatus(NO_CONFIG_UPDATE)
             printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
+            gpio.digitalWrite(MOTOR_ON_OFF_PIN, motorStatus)
+            if switchModel != model:
+                rtn = LOOP_RTN_TYPE_SW_CHANGE
+                break
 
         # Update the count in the LCD
         if countUpdate:
@@ -257,6 +266,7 @@ def doubleSwitchLoop():
         if cycleCounter >= TotalCounter:
             gpio.digitalWrite(ON_BOARD_LED_PIN, HIGH)
             gpio.digitalWrite(MOTOR_ON_OFF_PIN, LOW)
+            setMotorControlStatus(LOW)
             lcd.write("Count Finished!", row = ROW_NO_3, padding = True)
             print("Count Finished!")
             cycleCounter = 0
@@ -280,6 +290,7 @@ def doubleSwitchLoop():
         # If reset button pressed then clean the old stuffs
         if ResetTrigger:
             gpio.digitalWrite(MOTOR_ON_OFF_PIN, LOW)
+            setMotorControlStatus(LOW)
             cycleCounter = 0
             gpio.digitalWrite(ON_BOARD_LED_PIN, LOW)
             setCycleCount(cycleCounter)
@@ -289,13 +300,15 @@ def doubleSwitchLoop():
             time.sleep(1)
             printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
 
+    # Return the loop status
+    return rtn
 
 # Entry point main function
 def main():
     print("Entering initial setup.")
     doubleSwitchSetup(SWITCH_MODEL_DOUBLE)
     print("Entering main loop.")
-    doubleSwitchLoop()
+    doubleSwitchLoop(SWITCH_MODEL_DOUBLE)
 
 
 if __name__ == "__main__":

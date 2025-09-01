@@ -71,4 +71,29 @@ if(isset($_POST["updateCurrentCount"]))
     echo json_encode($response);
 }
 
+
+// update switch type
+if (isset($_POST["updateSwitchType"])) {
+    $newSwitchType = $_POST['newSwitchType'];
+    updateSwitchModel($newSwitchType);
+    $response = [
+        'msg'    => "Switch Type Updated to " . $newSwitchType,
+        'status' => TRUE,
+    ];
+    echo json_encode($response);
+}
+
+// toggle motor
+if (isset($_POST["toggleMotor"])) {
+    $newMotorState = toggleMotorState();
+    $buttonText = $newMotorState == 1 ? "Turn Off" : "Turn On";
+    $response = [
+        'msg'    => "Motor Turned " . ($newMotorState == 1 ? "On" : "Off"),
+        'status' => TRUE,
+        'buttonText' => $buttonText,
+        'motorStatus' => $newMotorState,
+    ];
+    echo json_encode($response);
+}
+
 ?>
