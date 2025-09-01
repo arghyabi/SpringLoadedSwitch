@@ -34,3 +34,7 @@ NO_CONFIG_UPDATE        = False
 
 SWITCH_MODEL_DOUBLE     = "Type-D"
 SWITCH_MODEL_SINGLE     = "Type-S"
+
+LOOP_RTN_TYPE_ERROR     = "error"
+LOOP_RTN_TYPE_SW_CHANGE = "switch"
+

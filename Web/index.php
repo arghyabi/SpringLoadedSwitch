@@ -4,6 +4,9 @@ require 'backend.php';
 $appVersion   = getAppVersion();
 $currentCount = getCurrentCountValue();
 $totalCount   = getTotalCountValue();
+$motorStatus  = getMotorStatus();
+$switchType   = getSwitchType();
+$motorButtonText = $motorStatus == 1 ? "Turn Off" : "Turn On";
 ?>
 
 <!DOCTYPE html>
@@ -27,6 +30,20 @@ $totalCount   = getTotalCountValue();
     </div>
     <div class="switch-container">
       <h2 id="countDisplay">Count: <?php echo $currentCount; ?> / <?php echo $totalCount; ?></h2>
+    </div>
+    <div class="controls">
+      <label for="switchType">Selected Switch Type:
+      <span id="switchTypeStatus"><?php echo $switchType; ?></span></label>
+      <select id="switchType" class="switchType">
+      <option value="Type-D">Type-D</option>
+      <option value="Type-S">Type-S</option>
+      </select>
+      <button id="setSwitchTypeBtn" onclick="updateSwitchType()">Update Type</button>
+    </div>
+    <div class="controls">
+      <label for="motorToggle">Motor Status:
+      <span id="motorStatus"><?php echo $motorStatus == 1 ? 'ON' : 'OFF'; ?></span></label>
+      <button id="motorToggle" class="<?php echo $motorStatus == 1 ? 'motor-on' : 'motor-off'; ?>" onclick="toggleMotor()"><?php echo $motorButtonText; ?></button>
     </div>
   </main>
 </body>
