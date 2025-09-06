@@ -1,7 +1,7 @@
-from utility import *
+from common       import *
+from utility      import *
 from doubleSwitch import *
 from singleSwitch import *
-from common import *
 
 
 def app_setup(switchModel):
@@ -27,14 +27,12 @@ def app_loop(switchModel):
 
 
 # Entry point main function
-def main():
-    print("Starting Spring Loaded Switch application.")
-    createRtDbFile()
+def main(ForceDbCreation = False):
+    print(f"Starting Spring Loaded Switch application. {getAppVersion()}")
+    createRtDbFile(ForceDbCreation)
     print("Database creation done!")
     print("Getting Switch Model...")
     switchModel = getSwitchModel()
-    # switchModel = SWITCH_MODEL_DOUBLE
-    # switchModel = SWITCH_MODEL_SINGLE
     print(f"Detected Switch Model: {switchModel}")
     print("Entering initial setup.")
     app_setup(switchModel)
@@ -43,7 +41,7 @@ def main():
     print(f"Main loop returned: {rtn}")
     if rtn == LOOP_RTN_TYPE_SW_CHANGE:
         print("Switch model change detected. Restarting application...")
-        main()
+        main(ForceDbCreation = True)
     else:
         print("Exiting application.")
         exit(-1)

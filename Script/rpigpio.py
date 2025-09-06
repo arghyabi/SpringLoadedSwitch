@@ -1,4 +1,8 @@
-import RPi.GPIO as GPIO # type: ignore
+try:
+    import RPi.GPIO as GPIO # type: ignore
+except ImportError:
+    print("RPi.GPIO module not found. Please install it using 'pip install RPi.GPIO'.")
+    GPIO = None
 from common import *
 
 class RpiGpio:
@@ -7,15 +11,22 @@ class RpiGpio:
 
 
     def init(self):
+        if GPIO is None:
+            print("RPi.GPIO module is not available.")
+            return
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD)
 
 
     def deinit(self):
-        GPIO.cleanup()
+        if GPIO:
+            GPIO.cleanup()
 
 
     def pinMode(self, pin: int, state: bool, pullUpDown: bool|None = None):
+        if GPIO is None:
+            print("RPi.GPIO module is not available.")
+            return
         _state      = None
         _pullUpDown = None
 
@@ -44,11 +55,15 @@ class RpiGpio:
 
 
     def digitalRead(self, pin: int):
+        if GPIO is None:
+            return LOW
         state = GPIO.input(pin)
         return state
 
 
     def digitalWrite(self, pin: int, state: bool):
+        if GPIO is None:
+            return
         _state = None
 
         # Mapping with HIGH LOW macro with GPIO.HIGH GPIO.LOW

@@ -33,8 +33,8 @@ def getAppVersion():
         return "0.0.0.0000"
 
 
-def createRtDbFile():
-    if not os.path.exists(RT_DB_FILE):
+def createRtDbFile(ForceDbCreation = False):
+    if not os.path.exists(RT_DB_FILE) or ForceDbCreation:
         blankData = {
             "cycleCount": 0,
             "switchModel": SWT_MODEL_DOUBLE_TYPE_B,
