@@ -5,9 +5,9 @@ from common import *
 
 
 def app_setup(switchModel):
-    if switchModel == SWITCH_MODEL_DOUBLE:
+    if switchModel == SWT_MODEL_DOUBLE_TYPE_B or switchModel == SWT_MODEL_DOUBLE_TYPE_C or switchModel == SWT_MODEL_DOUBLE_TYPE_E:
         doubleSwitchSetup(switchModel)
-    elif switchModel == SWITCH_MODEL_SINGLE:
+    elif switchModel == SWT_MODEL_SINGLE_TYPE_A or switchModel == SWT_MODEL_SINGLE_TYPE_D:
         singleSwitchSetup(switchModel)
     else:
         print("Unknown switch model. Exiting.")
@@ -15,9 +15,9 @@ def app_setup(switchModel):
 
 
 def app_loop(switchModel):
-    if switchModel == SWITCH_MODEL_DOUBLE:
+    if switchModel == SWT_MODEL_DOUBLE_TYPE_B or switchModel == SWT_MODEL_DOUBLE_TYPE_C or switchModel == SWT_MODEL_DOUBLE_TYPE_E:
         rtn = doubleSwitchLoop(switchModel)
-    elif switchModel == SWITCH_MODEL_SINGLE:
+    elif switchModel == SWT_MODEL_SINGLE_TYPE_A or switchModel == SWT_MODEL_SINGLE_TYPE_D:
         rtn = singleSwitchLoop(switchModel)
     else:
         print("Unknown switch model. Exiting.")

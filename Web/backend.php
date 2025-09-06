@@ -6,6 +6,12 @@ require 'vendor/autoload.php';
 $yamlConfigFilePath = '../config.yaml';
 $RtConfigFilePath   = '../rtDb.json';
 
+$SWT_MODEL_SINGLE_TYPE_A = "Type-A";
+$SWT_MODEL_SINGLE_TYPE_D = "Type-D";
+$SWT_MODEL_DOUBLE_TYPE_B = "Type-B";
+$SWT_MODEL_DOUBLE_TYPE_C = "Type-C";
+$SWT_MODEL_DOUBLE_TYPE_E = "Type-E";
+
 
 // get yaml config data
 function getConfigData()
@@ -126,6 +132,6 @@ function getMotorStatus()
 function getSwitchType()
 {
     $rtConfig = getRtConfig();
-    return isset($rtConfig['switchModel']) ? $rtConfig['switchModel'] : 'Type-D'; // Default to Type-D
+    return isset($rtConfig['switchModel']) ? $rtConfig['switchModel'] : $SWT_MODEL_DOUBLE_TYPE_B; // Default to Type-D
 }
 ?>

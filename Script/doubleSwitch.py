@@ -306,9 +306,9 @@ def doubleSwitchLoop(model: str):
 # Entry point main function
 def main():
     print("Entering initial setup.")
-    doubleSwitchSetup(SWITCH_MODEL_DOUBLE)
+    doubleSwitchSetup(SWT_MODEL_DOUBLE_TYPE_B)
     print("Entering main loop.")
-    doubleSwitchLoop(SWITCH_MODEL_DOUBLE)
+    doubleSwitchLoop(SWT_MODEL_DOUBLE_TYPE_B)
 
 
 if __name__ == "__main__":
