@@ -111,7 +111,7 @@ function toggleMotorState()
 {
     $rtConfig = getRtConfig();
     if (isset($rtConfig["motorStatus"])) {
-        $rtConfig["motorStatus"] = $rtConfig["motorStatus"] == 1 ? 0 : 1;
+        $rtConfig["motorStatus"] = ($rtConfig["motorStatus"] == 1) ? 0 : 1;
     } else {
         $rtConfig["motorStatus"] = 1; // Default to ON if not set
     }
