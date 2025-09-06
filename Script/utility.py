@@ -120,6 +120,7 @@ def setSwitchModel(switchModel):
     rtData = getYamlData(RT_DB_FILE)
     if rtData:
         rtData["switchModel"] = switchModel
+        setYamlData(RT_DB_FILE, rtData)
 
 
 def getMotorControlStatus():

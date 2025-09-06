@@ -58,10 +58,7 @@ def gpioInitialization():
 
     gpio.pinMode(MICRO_SWITCH_S1_NC_PIN, INPUT, PULL_DOWN)
     gpio.pinMode(MICRO_SWITCH_S1_NO_PIN, INPUT, PULL_DOWN)
-    # gpio.pinMode(MICRO_SWITCH_S2_NC_PIN, INPUT, PULL_DOWN)
-    # gpio.pinMode(MICRO_SWITCH_S2_NO_PIN, INPUT, PULL_DOWN)
 
-    # gpio.pinMode(POSITION_RIGHT_LED_PIN, OUTPUT)
     gpio.pinMode(POSITION_MIDDLE_LED_PIN, OUTPUT)
     gpio.pinMode(POSITION_LEFT_LED_PIN, OUTPUT)
 
@@ -72,7 +69,6 @@ def gpioInitialization():
     gpio.digitalWrite(GPIO_3V3_1_PIN, HIGH)
     gpio.digitalWrite(GPIO_3V3_2_PIN, HIGH)
 
-    # gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
     gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
     gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
 
@@ -82,7 +78,6 @@ def gpioInitialization():
 # Time print function
 def printCurrentTime(row: int):
     lcd.write(datetime.now().strftime('%I:%M:%S %p %d/%m/%y'), row = row, padding = True)
-    # time.sleep(0.1)
 
 
 # Print the count value
@@ -93,22 +88,14 @@ def printCountValue(row: int, currentCount: int, totalCount: int):
 # Turn on only the position LED
 def showPositionLED(position: int|None):
     if position == POSITION_LEFT:
-        # gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
         gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
         gpio.digitalWrite(POSITION_LEFT_LED_PIN, HIGH)
 
-    # elif position == POSITION_RIGHT:
-    #     gpio.digitalWrite(POSITION_RIGHT_LED_PIN, HIGH)
-    #     gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
-    #     gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
-
     elif position == POSITION_MIDDLE:
-        # gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
         gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, HIGH)
         gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
 
     else:
-        # gpio.digitalWrite(POSITION_RIGHT_LED_PIN, LOW)
         gpio.digitalWrite(POSITION_MIDDLE_LED_PIN, LOW)
         gpio.digitalWrite(POSITION_LEFT_LED_PIN, LOW)
 
@@ -133,32 +120,24 @@ def singleSwitchSetup(model: str):
     ## MID       1         0    ##
     ##############################
 
-    if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN):# and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
+    if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN):
         previousPosition = POSITION_LEFT
         cycleIndexPos    = POSITION_LEFT
         print("Initial position: LEFT")
 
-    if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN):# and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
+    if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN):
         previousPosition = POSITION_MIDDLE
         cycleIndexPos    = POSITION_MIDDLE
         print("Initial position: MIDDLE")
 
-    # if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
-    #     previousPosition = POSITION_RIGHT
-    #     cycleIndexPos    = POSITION_RIGHT
-    #     print("Initial position: RIGHT")
-
     ########## TEST BEGIN ###############
-    # if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and  gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN) and\
-    #     gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN) and\
-    #     gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
     if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN):
         previousPosition = POSITION_MIDDLE
         cycleIndexPos    = POSITION_MIDDLE
         print("Probably No switch found; All pin are HIGH ... !!")
 
     if previousPosition == None and cycleIndexPos == None:
-        raise Exception("Someting Wrong!! Not able to read switch posiiton!!")
+        raise Exception("Something Wrong!! Not able to read switch position!!")
 
     ########## TEST END## ###############
 
@@ -203,25 +182,18 @@ def singleSwitchLoop(model: str):
         ##############################
 
         # Reading the gpio pin for the switchs
-        if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN):# and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
+        if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN):
             currentPosition = POSITION_LEFT
             lcd.write("Position Left  ", row = ROW_NO_2)
             print("Position Left")
 
-        if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN):# and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
+        if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN):
             currentPosition = POSITION_MIDDLE
             lcd.write("Position Middle", row = ROW_NO_2)
             print("Position Middle")
 
-        # if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
-        #     currentPosition = POSITION_RIGHT
-        #     lcd.write("Position Right ", row = ROW_NO_2)
-        #     print("Position Right")
-
         print("S1_NO:", gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN), end="\t")
         print("S1_NC:", gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN))
-        # print("S2_NO:", gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN), end="\t")
-        # print("S2_NC:", gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN))
 
         # Turn on the postion LED
         showPositionLED(currentPosition)
@@ -229,17 +201,11 @@ def singleSwitchLoop(model: str):
         #  According to the position, update the count number
         countUpdate = False
         if currentPosition != previousPosition:
-            if currentPosition == POSITION_LEFT:# or currentPosition == POSITION_RIGHT:
-                if cycleIndexPos == currentPosition:
-                    cycleCounter += 1
-                    countUpdate = True
-            elif currentPosition == POSITION_MIDDLE:
-                if cycleIndexPosMiddle and (cycleIndexPos == currentPosition):
-                    cycleCounter += 1
-                    countUpdate = True
-                cycleIndexPosMiddle = not cycleIndexPosMiddle
-            else:
-                pass
+            # A full cycle is  MIDDLE -> LEFT -> MIDDLE.
+            # Increment count when transitioning from MIDDLE to LEFT.
+            if currentPosition == POSITION_MIDDLE and previousPosition == POSITION_LEFT:
+                cycleCounter += 1
+                countUpdate = True
 
         previousPosition = currentPosition
 

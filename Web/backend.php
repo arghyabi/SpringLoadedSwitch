@@ -132,6 +132,6 @@ function getMotorStatus()
 function getSwitchType()
 {
     $rtConfig = getRtConfig();
-    return isset($rtConfig['switchModel']) ? $rtConfig['switchModel'] : $SWT_MODEL_DOUBLE_TYPE_B; // Default to Type-D
+    return isset($rtConfig['switchModel']) ? $rtConfig['switchModel'] : $SWT_MODEL_DOUBLE_TYPE_B; // Default to Type-B
 }
 ?>

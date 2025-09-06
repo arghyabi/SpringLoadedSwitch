@@ -82,7 +82,6 @@ def gpioInitialization():
 # Time print function
 def printCurrentTime(row: int):
     lcd.write(datetime.now().strftime('%I:%M:%S %p %d/%m/%y'), row = row, padding = True)
-    # time.sleep(0.1)
 
 
 # Print the count value
@@ -158,7 +157,7 @@ def doubleSwitchSetup(model: str):
         print("Probably No switch found; All pin are HIGH ... !!")
 
     if previousPosition == None and cycleIndexPos == None:
-        raise Exception("Someting Wrong!! Not able to read switch posiiton!!")
+        raise Exception("Something Wrong!! Not able to read switch position!!")
 
     ########## TEST END## ###############
 
