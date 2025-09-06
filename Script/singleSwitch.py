@@ -305,9 +305,9 @@ def singleSwitchLoop(model: str):
 # Entry point main function
 def main():
     print("Entering initial setup.")
-    singleSwitchSetup(SWITCH_MODEL_SINGLE)
+    singleSwitchSetup(SWT_MODEL_SINGLE_TYPE_A)
     print("Entering main loop.")
-    singleSwitchLoop(SWITCH_MODEL_SINGLE)
+    singleSwitchLoop(SWT_MODEL_SINGLE_TYPE_A)
 
 
 if __name__ == "__main__":

@@ -35,8 +35,11 @@ $motorButtonText = $motorStatus == 1 ? "Turn Off" : "Turn On";
       <label for="switchType">Selected Switch Type:
       <span id="switchTypeStatus"><?php echo $switchType; ?></span></label>
       <select id="switchType" class="switchType">
-      <option value="Type-D">Type-D</option>
-      <option value="Type-S">Type-S</option>
+      <option value="Type-A">Type-A (Single)</option>
+      <option value="Type-B">Type-B (Double)</option>
+      <option value="Type-C">Type-C (Double)</option>
+      <option value="Type-D">Type-D (Single)</option>
+      <option value="Type-E">Type-E (Double)</option>
       </select>
       <button id="setSwitchTypeBtn" onclick="updateSwitchType()">Update Type</button>
     </div>

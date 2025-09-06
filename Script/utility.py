@@ -37,7 +37,7 @@ def createRtDbFile():
     if not os.path.exists(RT_DB_FILE):
         blankData = {
             "cycleCount": 0,
-            "switchModel": SWITCH_MODEL_DOUBLE,
+            "switchModel": SWT_MODEL_DOUBLE_TYPE_B,
             "motorStatus": 0
         }
 
@@ -106,12 +106,12 @@ def setConfigUpdateStatus(status):
 
 
 def getSwitchModel():
-    switchModel = SWITCH_MODEL_DOUBLE
+    switchModel = SWT_MODEL_DOUBLE_TYPE_B
     rtData = getYamlData(RT_DB_FILE)
     if rtData:
         switchModel = rtData.get("switchModel")
         if switchModel == None:
-            switchModel = SWITCH_MODEL_DOUBLE
+            switchModel = SWT_MODEL_DOUBLE_TYPE_B
 
     return switchModel
 
