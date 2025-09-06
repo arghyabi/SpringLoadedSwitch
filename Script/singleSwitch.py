@@ -189,10 +189,11 @@ def singleSwitchLoop(model: str):
     global lastDebounceTime
 
     rtn = LOOP_RTN_TYPE_ERROR
+    switchModel = None
 
     while True:
-        gpio.digitalWrite(MOTOR_ON_OFF_PIN, HIGH)
-        setMotorControlStatus(HIGH)
+        motorStatus  = getMotorControlStatus()
+        gpio.digitalWrite(MOTOR_ON_OFF_PIN, motorStatus)
         printCurrentTime(ROW_NO_0)
 
         ##############################
@@ -303,7 +304,7 @@ def singleSwitchLoop(model: str):
             printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
 
     # Return the loop status
-    return rtn
+    return rtn, switchModel
 
 # Entry point main function
 def main():

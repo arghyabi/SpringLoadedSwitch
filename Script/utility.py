@@ -38,7 +38,7 @@ def createRtDbFile(ForceDbCreation = False):
         blankData = {
             "cycleCount": 0,
             "switchModel": SWT_MODEL_DOUBLE_TYPE_B,
-            "motorStatus": 0
+            "motorStatus": 1
         }
 
         setYamlData(RT_DB_FILE, blankData)
@@ -114,6 +114,12 @@ def getSwitchModel():
             switchModel = SWT_MODEL_DOUBLE_TYPE_B
 
     return switchModel
+
+
+def setSwitchModel(switchModel):
+    rtData = getYamlData(RT_DB_FILE)
+    if rtData:
+        rtData["switchModel"] = switchModel
 
 
 def getMotorControlStatus():
