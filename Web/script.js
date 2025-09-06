@@ -76,6 +76,9 @@ function updateCurrentCountValue() {
 
 
 function updateSwitchType() {
+    if (!confirm("Changing switch type will reset the current count to 0. Do you want to continue?")) {
+        return;
+    }
     let valueElement = document.getElementById('switchType');
     let switchType = valueElement.value;
 

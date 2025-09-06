@@ -252,6 +252,9 @@ def singleSwitchLoop(model: str):
             printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
             gpio.digitalWrite(MOTOR_ON_OFF_PIN, motorStatus)
             if switchModel != model:
+                # Switch model has changed
+                print("Switch model change detected.")
+                gpio.digitalWrite(MOTOR_ON_OFF_PIN, LOW)
                 rtn = LOOP_RTN_TYPE_SW_CHANGE
                 break
 

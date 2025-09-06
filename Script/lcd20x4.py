@@ -1,4 +1,8 @@
-from RPLCD.i2c import CharLCD
+try:
+    from RPLCD.i2c import CharLCD
+except ImportError:
+    print("RPLCD module not found. Please install it using 'pip install RPLCD'.")
+    CharLCD = None
 
 class Lcd20x4:
     def __init__(self, i2cAddress: int, column: int, row: int):
