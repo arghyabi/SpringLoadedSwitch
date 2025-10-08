@@ -28,6 +28,7 @@ buttonState      = None
 ResetTrigger     = False
 isConfigReadNeed = True
 cycleIndexPosMiddle = False
+countComplete    = False
 
 lastButtonState  = HIGH
 debounceDelay    = 5000
@@ -186,6 +187,7 @@ def doubleSwitchLoop(model: str):
     global buttonState
     global ResetTrigger
     global lastDebounceTime
+    global countComplete
 
     rtn = LOOP_RTN_TYPE_ERROR
     switchModel = None
@@ -205,18 +207,21 @@ def doubleSwitchLoop(model: str):
         # Reading the gpio pin for the switchs
         if gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
             currentPosition = POSITION_LEFT
-            lcd.write("Position Left  ", row = ROW_NO_2)
             print("Position Left")
+            if not countComplete:
+                lcd.write("Position Left  ", row = ROW_NO_2)
 
         if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NO_PIN):
             currentPosition = POSITION_MIDDLE
-            lcd.write("Position Middle", row = ROW_NO_2)
             print("Position Middle")
+            if not countComplete:
+                lcd.write("Position Middle", row = ROW_NO_2)
 
         if gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN) and gpio.digitalRead(MICRO_SWITCH_S2_NC_PIN):
             currentPosition = POSITION_RIGHT
-            lcd.write("Position Right ", row = ROW_NO_2)
             print("Position Right")
+            if not countComplete:
+                lcd.write("Position Right ", row = ROW_NO_2)
 
         print("S1_NO:", gpio.digitalRead(MICRO_SWITCH_S1_NO_PIN), end="\t")
         print("S1_NC:", gpio.digitalRead(MICRO_SWITCH_S1_NC_PIN), end="\t")
@@ -270,9 +275,10 @@ def doubleSwitchLoop(model: str):
             gpio.digitalWrite(ON_BOARD_LED_PIN, HIGH)
             gpio.digitalWrite(MOTOR_ON_OFF_PIN, LOW)
             setMotorControlStatus(LOW)
-            lcd.write("Count Finished!", row = ROW_NO_3, padding = True)
+            lcd.write("Count Finished!", row = ROW_NO_2, padding = True)
             print("Count Finished!")
             cycleCounter = 0
+            countComplete = True
 
         # Reset button debounce logic
         ResetBtnReading = gpio.digitalRead(RESET_PUSH_SWITCH_PIN)
@@ -298,10 +304,13 @@ def doubleSwitchLoop(model: str):
             gpio.digitalWrite(ON_BOARD_LED_PIN, LOW)
             setCycleCount(cycleCounter)
             ResetTrigger = False
+            countComplete = False
             time.sleep(2)
             lcd.write(" "*LCD_MODULE_NO_OF_COLUMN, row = ROW_NO_3)
             time.sleep(1)
             printCountValue(row = ROW_NO_3, currentCount = cycleCounter, totalCount = TotalCounter)
+            gpio.digitalWrite(MOTOR_ON_OFF_PIN, HIGH)
+            setMotorControlStatus(HIGH)
 
     # Return the loop status
     return rtn, switchModel
