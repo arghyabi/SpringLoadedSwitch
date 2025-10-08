@@ -3,17 +3,17 @@ MICRO_SWITCH_S1_NC_PIN       = 31
 MICRO_SWITCH_S2_NO_PIN       = 33
 MICRO_SWITCH_S2_NC_PIN       = 35
 
-POSITION_LEFT_LED_PIN        = 11
-POSITION_MIDDLE_LED_PIN      = 13
-POSITION_RIGHT_LED_PIN       = 15
+POSITION_LEFT_LED_PIN        = 13
+POSITION_MIDDLE_LED_PIN      = 11
+POSITION_RIGHT_LED_PIN       =  7
 
-RESET_PUSH_SWITCH_PIN        = 37
+RESET_PUSH_SWITCH_PIN        = 38
 
 MOTOR_ON_OFF_PIN             = 32
 
-ON_BOARD_LED_PIN             = 36
+ON_BOARD_LED_PIN             = 15
 
-GPIO_3V3_1_PIN               = 38
-GPIO_3V3_2_PIN               = 40
+GPIO_3V3_1_PIN               = 36
+GPIO_3V3_2_PIN               = 37
 
 LCD_MODULE_ADDRESS           = 0x27
