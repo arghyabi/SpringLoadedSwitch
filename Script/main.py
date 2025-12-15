@@ -30,7 +30,7 @@ def app_loop(switchModel):
 # Entry point main function
 def main(ForceDbCreation = False, newSwModel = None):
     print(f"Starting Spring Loaded Switch application. {getAppVersion()}")
-    createRtDbFile(ForceDbCreation)
+    createRtDbFile(ForceDbCreation, SwModel = newSwModel)
     print("Database creation done!")
     if newSwModel:
         print("Updating new Switch Model...")
